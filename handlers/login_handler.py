@@ -56,12 +56,12 @@ async def message_with_text(message: Message, state: FSMContext):
 @main_router.message(AuthWorker.worker_code)
 async def message_with_text(message: Message):
     if check_worker_code(message.text):
-        pass
+        await message.answer('Вы успешно авторизовались', reply_markup=user_keyboards.main())
     # кидает в табличку с пользователями и их ролями
 
 
 @main_router.message(AuthAdmin.admin_code)
 async def message_with_text(message: Message):
     if check_admin_code(message.text):
-        pass
+        await message.answer('Вы успешно авторизовались', reply_markup=admin_keyboards.main())
     # кидает в табличку с пользователями и их ролями

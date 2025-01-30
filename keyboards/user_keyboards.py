@@ -1,6 +1,7 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
-worker_keyboard = ReplyKeyboardMarkup(
+def main() -> ReplyKeyboardMarkup:
+    return ReplyKeyboardMarkup(
     keyboard=[
         [KeyboardButton(text="Выбрать точку")],
         [KeyboardButton(text="Посмотреть график")],

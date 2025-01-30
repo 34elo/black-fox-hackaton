@@ -1,4 +1,6 @@
-from aiogram.types import InlineKeyboardButton, KeyboardButton, InlineKeyboardMarkup
+import math
+
+from aiogram.types import InlineKeyboardButton, KeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup
 from aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardBuilder, ReplyKeyboardMarkup
 
 
@@ -12,13 +14,23 @@ def main() -> ReplyKeyboardMarkup:
     return kb.as_markup(resize_keyboard=True)
 
 
-def points_list(arg: list[str]) -> InlineKeyboardMarkup:
-    buttons = [
-        [],
-    ]
-    for item in arg:
-        buttons[0].append(InlineKeyboardButton(text=item, callback_data=item))
-        print(item)
+def points_list(arg: list[str]) -> ReplyKeyboardMarkup:
+    arg.append('Меню')
+    num_elements = len(arg)
+    if num_elements == 0:
+        return ReplyKeyboardMarkup(keyboard=[], resize_keyboard=True)
 
-    keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
+    # Находим ближайшее целое число к квадратному корню, чтобы сделать клавиатуру более "квадратной"
+    row_size = int(round(math.sqrt(num_elements)))
+
+    # Уточняем row_size: если row_size*row_size не хватает, добавляем +1 для row_size
+    if row_size * row_size < num_elements:
+        row_size += 1
+
+    keyboard_buttons = []
+    for i in range(0, num_elements, row_size):
+        row = [KeyboardButton(text=item) for item in arg[i:i + row_size]]
+        keyboard_buttons.append(row)
+
+    keyboard = ReplyKeyboardMarkup(keyboard=keyboard_buttons, resize_keyboard=True)
     return keyboard

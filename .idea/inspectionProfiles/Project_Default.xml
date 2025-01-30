@@ -4,28 +4,15 @@
     <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="ignoredPackages">
         <value>
-          <list size="3">
-            <item index="0" class="java.lang.String" itemvalue="PyQt6_sip" />
-            <item index="1" class="java.lang.String" itemvalue="typing_extensions" />
+          <list size="5">
+            <item index="0" class="java.lang.String" itemvalue="pydantic" />
+            <item index="1" class="java.lang.String" itemvalue="pydantic_core" />
             <item index="2" class="java.lang.String" itemvalue="PyQt6" />
+            <item index="3" class="java.lang.String" itemvalue="psycopg2" />
+            <item index="4" class="java.lang.String" itemvalue="PyQt6-Qt6" />
           </list>
         </value>
       </option>
-    </inspection_tool>
-    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
-      <option name="ignoredIdentifiers">
-        <list>
-          <option value="list.__rshift__" />
-          <option value="list.__lshift__" />
-          <option value="main.MainWindow.saveButton" />
-          <option value="main.MainWindow.*" />
-        </list>
-      </option>
-    </inspection_tool>
-    <inspection_tool class="SpellCheckingInspection" enabled="false" level="TYPO" enabled_by_default="false">
-      <option name="processCode" value="true" />
-      <option name="processLiterals" value="true" />
-      <option name="processComments" value="true" />
     </inspection_tool>
   </profile>
 </component>

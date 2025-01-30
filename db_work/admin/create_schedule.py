@@ -22,6 +22,3 @@ def auto_schedule_create():
                     users[wish[0]].append(day)
     points_schedule.commit()
     points_schedule.close()
-
-
-auto_schedule_create()

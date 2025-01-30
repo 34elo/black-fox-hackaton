@@ -8,7 +8,7 @@ from handlers.login_handler import main_router
 
 # Запуск бота
 async def main():
-    bot = Bot(token="7970347344:AAGhbs_C2DoGZpFOJ_ywDEwUbjzFS3WajVs")
+    bot = Bot(token="")
     dp = Dispatcher()
     logging.basicConfig(level=logging.INFO)
 

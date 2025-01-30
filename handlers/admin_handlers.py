@@ -2,7 +2,7 @@ from aiogram import Router, F
 from aiogram.enums import ParseMode
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
-from aiogram.types import Message, InlineKeyboardMarkup, CallbackQuery, InputFile
+from aiogram.types import Message
 
 from db_work.admin.create_schedule import auto_schedule_create
 from db_work.admin.format_text import format_schedule_table
@@ -35,11 +35,13 @@ async def send_notification_tg(message: Message, state: FSMContext) -> None:
     await message.answer('Напишите ваше сообщение-рассылку')
     await state.set_state(NotificationText.text)
 
+
 @router_admin_panel.message(NotificationText.text)
-async def message_with_text(message: Message, state: FSMContext)-> None:
+async def message_with_text(message: Message, state: FSMContext) -> None:
     send_notifications(message.text)
     await message.answer('Ваше уведомление сотрудникам отправлено')
     await state.clear()
+
 
 @router_admin_panel.message(F.text == "Графики на точках")
 async def check_points(message: Message) -> None:

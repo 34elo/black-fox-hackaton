@@ -1,12 +1,12 @@
 def auto_schedule_create():
     import sqlite3
 
-    wishes = sqlite3.connect('../../data/users_data.sqlite')
+    wishes = sqlite3.connect('../data/users_data.sqlite')
     wishes_cursor = wishes.cursor()
     wishes = wishes_cursor.execute('''SELECT "ФИО", "Желаемые точки", "Желаемые смены" 
                                       FROM employees_wishes''').fetchall()
 
-    points_schedule = sqlite3.connect('../../data/schedule.sqlite')
+    points_schedule = sqlite3.connect('../data/schedule.sqlite')
     schedule_cursor = points_schedule.cursor()
     users = wishes_cursor.execute('''SELECT "ФИО"
                                               FROM employees_wishes''').fetchall()

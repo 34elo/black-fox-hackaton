@@ -1,5 +1,6 @@
-from aiogram.types import ReplyKeyboardMarkup
-from aiogram.utils.keyboard import ReplyKeyboardBuilder
+from aiogram.types import InlineKeyboardButton, KeyboardButton
+from aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardBuilder, ReplyKeyboardMarkup
+
 
 def main() -> ReplyKeyboardMarkup:
     kb = ReplyKeyboardBuilder()
@@ -11,14 +12,8 @@ def main() -> ReplyKeyboardMarkup:
     return kb.as_markup(resize_keyboard=True)
 
 def points_list(arg: list[str]) -> ReplyKeyboardMarkup:
+    kb = ReplyKeyboardBuilder()
     for i in arg:
-        buttons = [
-            [
-                types.InlineKeyboardButton(text="-1", callback_data="num_decr"),
-                types.InlineKeyboardButton(text="+1", callback_data="num_incr")
-            ],
-            [types.InlineKeyboardButton(text="Подтвердить", callback_data="num_finish")]
-        ]
-    keyboard = types.InlineKeyboardMarkup(inline_keyboard=buttons)
+        kb.button(text=str(i), callback_data=i)
 
-    return
+    return kb.as_markup(resize_keyboard=True)

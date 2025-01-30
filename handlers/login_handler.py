@@ -39,7 +39,15 @@ def check_worker_code(password) -> bool:  # проверка на сотрудн
     return True if password in data else False
 
 
-def already_auth(chat_id) -> (bool, bool):  # уже зареган(true) / админ или сотрудник(false)
+def already_auth(chat_id, role) -> (bool, bool):  # уже зареган(true) / админ или сотрудник(false)
+    import sqlite3
+
+    data = sqlite3.connect('../../data/users_data.sqlite')
+    data_cursor = data.cursor()
+    data_cursor.execute(f'''INSERT INTO "chatID_and_roles"("ChatID", "Role") 
+                                   VALUES ({chat_id}, {role})''').fetchall()
+    data.commit()
+    data.close()
     return True, True
 
 

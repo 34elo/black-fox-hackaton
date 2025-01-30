@@ -17,12 +17,26 @@ class AuthWorker(StatesGroup):
     worker_code = State()
 
 
-def check_admin_code(arg) -> bool:  # проверка на админа в бд
-    pass
+def check_admin_code(password) -> bool:  # проверка на админа в бд
+    import sqlite3
+
+    data = sqlite3.connect('../../data/users_data.sqlite')
+    data_cursor = data.cursor()
+    data = data_cursor.execute('''SELECT "Пароль" 
+                                  FROM admin_passwords''').fetchall()
+    data = [i[0] for i in data]
+    return True if password in data else False
 
 
-def check_worker_code(arg) -> bool:  # проверка на сотрудника в бд
-    pass
+def check_worker_code(password) -> bool:  # проверка на сотрудника в бд
+    import sqlite3
+
+    data = sqlite3.connect('../../data/users_data.sqlite')
+    data_cursor = data.cursor()
+    data = data_cursor.execute('''SELECT "Пароль" 
+                                      FROM employees_passwords''').fetchall()
+    data = [i[0] for i in data]
+    return True if password in data else False
 
 
 def already_auth(chat_id) -> (bool, bool):  # уже зареган(true) / админ или сотрудник(false)

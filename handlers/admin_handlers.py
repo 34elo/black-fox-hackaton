@@ -140,10 +140,18 @@ async def contact(message: Message, state: FSMContext) -> None:
     await state.clear()
 
 
-@router_admin_panel.message(F.text == 'Топ работников')
+@router_admin_panel.message(F.text == 'Количество смен у работников')
 async def top_users(message: Message, state: FSMContext) -> None:
-    text = 'Топ работников\n\n'
+    text = 'Количество смен у работников\n\n'
     datas = get_working_times()
     for item in datas:
         text += str(item[0]) + ' - ' + str(item[1]) + '\n'
     await message.answer(text)
+
+@router_admin_panel.message(F.text == 'Выгрузить в Excel')
+async def excel(message: Message, state: FSMContext) -> None:
+    await message.answer('В разработке')
+
+@router_admin_panel.message(F.text == 'Загрузить из Excel')
+async def excel(message: Message, state: FSMContext) -> None:
+    await message.answer('В разработке')

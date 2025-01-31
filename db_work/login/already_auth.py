@@ -13,5 +13,4 @@ def already_auth(chat_id) -> (bool, bool):  # уже зареган(true) / ад
     data.commit()
     data.close()
 
-    a, b = True, True # ЗАГЛУШКА
     return a, b

@@ -1,11 +1,10 @@
-from keyboards.user_keyboards import main
-from aiogram import Router, F, Bot, Dispatcher
+from aiogram import Router, F
 from aiogram.types import Message, InlineKeyboardButton, CallbackQuery
-from db_work.user.functions import get_all_points, get_free_shift, viev_schedule, get_name_from_username
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-router = Router()
+from db_work.user.functions import get_all_points, get_free_shift, viev_schedule, get_name_from_username
 
+router = Router()
 
 
 @router.message(F.text == "Посмотреть свободные смены на определенной точке")
@@ -62,7 +61,6 @@ async def send_random_value(callback: CallbackQuery):
     await callback.message.answer(f'{str(point)}')
 
 
-
 @router.message(F.text == "Посмотреть все свои смены")
 async def handle_worker_buttons(message: Message):
     full_name = get_name_from_username(message.from_user.username)[0]
@@ -98,16 +96,18 @@ async def set_points(message: Message):
         reply_markup=builder.as_markup()
     )
 
+
 @router.callback_query(F.data[:11] == 'set_points_')
 async def add_points(callback: CallbackQuery):
     point = callback.data[11:]
     await callback.message.answer(f'{str(point)} успешно добавлено в список ваших желаемых точек')
 
+
 @router.callback_query(F.data == "set_points_break")
 async def break_add_points(callback: CallbackQuery):
     await callback.message.answer(f'')
 
+
 @router.message(F.text == "Установить желаемые смены")
 async def handle_worker_buttons(message: Message):
     await message.answer(f"Вы выбрали: {message.text}")
-

@@ -6,16 +6,6 @@ POINTS = ['25_Сентября_35а', '25_Сентября_35а/2', 'Багра�
 
 DAYS_LST = ['ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ', 'ВС']
 
-def get_all_admins():
-    connection = sqlite3.connect('data/users_data.sqlite')
-    cursor = connection.cursor()
-    res = cursor.execute(f'''
-        SELECT username, "ФИО" FROM "admin_passwords"
-    ''').fetchall()
-    return [list(map(lambda x: x[0], res)), list(map(lambda x: x[1], res))]
-
-
-
 
 def get_all_points():
     return POINTS
@@ -46,7 +36,7 @@ def get_name_from_username(username):
 def viev_schedule(ful_name):
     result = []
     for point in POINTS:
-        connection = sqlite3.connect('../data/schedule.sqlite')
+        connection = sqlite3.connect('data/schedule.sqlite')
         cursor = connection.cursor()
         res = cursor.execute(f'''
                 SELECT * FROM "{point}"
@@ -75,6 +65,13 @@ def viev_schedule(ful_name):
 # SELECT * FROM "employees_wishes"
 # ''').fetchall()
 # print(res)
+def get_all_admins():
+    connection = sqlite3.connect('data/users_data.sqlite')
+    cursor = connection.cursor()
+    res = cursor.execute(f'''
+        SELECT username, "ФИО" FROM "admin_passwords"
+    ''').fetchall()
+    return [list(map(lambda x: x[0], res)), list(map(lambda x: x[1], res))]
 
 
 def contact_with_admin():
@@ -82,24 +79,50 @@ def contact_with_admin():
 
 
 def set_work_points(username, args):
-    connection = sqlite3.connect('../data/users_data.sqlite')
+    print(username)
+    connection = sqlite3.connect('data/users_data.sqlite')
     cursor = connection.cursor()
-    res = list(cursor.execute(f'''
-    SELECT "Желаемые точки" FROM employees_wishes
-    WHERE Username TG = "{username}"
-    ''').fetchone()[0])
+    try:
+        res = cursor.execute(f'''
+        SELECT "Желаемые точки" FROM employees_wishes
+        WHERE "Username TG" = "{username}"
+''').fetchone()[0]
+    except Exception as e:
+        print(e)
     if res:
         res += f';{args}'
     else:
         res = args
     cursor.execute(f'''
     UPDATE employees_wishes
-    SET "Желаемые точки" = "{res}",
-    WHERE Username TG = "{username}"
+    SET "Желаемые точки" = "{res}"
+    WHERE "Username TG" = "{username}"
     ''')
     connection.commit()
     connection.close()
 
 
-def set_work_schedule():
-    return
+print()
+
+
+# def set_work_points(username, args):
+#     connection = sqlite3.connect('../data/users_data.sqlite')
+#     cursor = connection.cursor()
+#     res = list(cursor.execute(f'''
+#     SELECT "Желаемые точки" FROM employees_wishes
+#     WHERE Username TG = "{username}"
+#     ''').fetchone()[0])
+#     if res:
+#         res += f';{args}'
+#     else:
+#         res = args
+#     cursor.execute(f'''
+#     UPDATE employees_wishes
+#     SET "Желаемые точки" = "{res}",
+#     WHERE Username TG = "{username}"
+#     ''')
+#     connection.commit()
+#     connection.close()
+
+def get_all_schedule():
+    return DAYS_LST

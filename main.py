@@ -10,7 +10,7 @@ from handlers.user_handlers import router
 
 # Запуск бота
 async def main():
-    bot = Bot(token="7970347344:AAFPfTQi5dZ_jDLTS-g6193UXp10ILTDXvQ")
+    bot = Bot(token="7170658393:AAG8fbrrzkIFMR59b7lRIHqJLHEZa9z6Xvg")
     dp = Dispatcher()
     logging.basicConfig(level=logging.INFO)
 

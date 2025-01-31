@@ -10,6 +10,9 @@ def main() -> ReplyKeyboardMarkup:
     kb.button(text="Отправить уведомления сотрудникам")
     kb.button(text="Графики на точках")
     kb.button(text="Связаться с сотрудником")
+    kb.button(text="Количество смен у работников")
+    kb.button(text='Выгрузить в Excel')
+    kb.button(text='Загрузить из Excel')
     kb.adjust(2)
     return kb.as_markup(resize_keyboard=True)
 
@@ -34,6 +37,7 @@ def points_list(arg: list[str]) -> ReplyKeyboardMarkup:
 
     keyboard = ReplyKeyboardMarkup(keyboard=keyboard_buttons, resize_keyboard=True)
     return keyboard
+
 
 def edit_schedule() -> InlineKeyboardBuilder:
     builder = InlineKeyboardBuilder()

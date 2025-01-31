@@ -60,8 +60,14 @@ async def get_schedule(message: Message):
 @router.callback_query(F.data[:13] == 'get_schedule_')
 async def send_random_value(callback: CallbackQuery):
     point = callback.data[13:]
-    # ФУНКЦИЯ КОТОРАЯ СОЗДАЕТ ГРАФИК
-    await callback.message.answer(f'{str(point)}')
+    table = f'Расписание {str(point)}\n\n'
+    datas = get_data_about_point(str(point))
+    for i in datas.keys():
+        if datas[i] != 'None':
+            table += str(i) + ': ' + datas[i] + '\n'
+        else:
+            table += str(i) + ': ' + 'Не занято' + '\n'
+    await callback.message.answer(table)
 
 
 @router.message(F.text == "Посмотреть все свои смены")

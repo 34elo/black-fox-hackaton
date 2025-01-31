@@ -1,3 +1,5 @@
+from turtledemo.clock import make_hand_shape
+
 from aiogram import Router, F
 from aiogram.enums import ParseMode
 from aiogram.filters.callback_data import CallbackQueryFilter
@@ -10,6 +12,7 @@ from db_work.admin.create_schedule import auto_schedule_create
 from db_work.admin.edit_schedule import insert_to_schedule
 from db_work.admin.format_text import format_worker_schedule_table
 from db_work.admin.get_data_about_point import get_data_about_point
+from db_work.admin.get_id_user import get_id_user
 from db_work.admin.send_notifications import send_notifications
 from keyboards import admin_keyboards
 from keyboards.admin_keyboards import points_list, edit_schedule
@@ -25,6 +28,10 @@ class ScheduleText(StatesGroup):
     worker = State()
     smena = State()
     points = State()
+
+
+class Contact(StatesGroup):
+    contact = State()
 
 
 def get_points() -> list[str]:  # список таблиц с точками
@@ -117,3 +124,16 @@ async def worker(message: Message, state: FSMContext) -> None:
     except Exception as e:
         print(e)
         await message.answer('Ошибка, попробуйте снова')
+
+
+@router_admin_panel.message(F.text == 'Связаться с сотрудником')
+async def contact(message: Message, state: FSMContext) -> None:
+    await message.answer('Введите ФИО контакт, которого вам нужен')
+    await state.set_state(Contact.contact)
+
+
+@router_admin_panel.message(Contact.contact)
+async def contact(message: Message, state: FSMContext) -> None:
+    await message.answer(get_id_user(message.text))
+    await state.clear()
+

@@ -34,7 +34,7 @@ def get_points() -> list[str]:  # список таблиц с точками
 
 @router_admin_panel.message(F.text == "Сформировать частичный график")
 async def create_schedule(message: Message) -> None:
-    auto_schedule_create()
+    auto_schedule_create('../data/users_data.sqlite', '../data/schedule.sqlite')
     await message.answer('График сформирован')
 
 
@@ -107,7 +107,7 @@ async def worker(message: Message, state: FSMContext) -> None:
     try:
         ScheduleText.worker = message.text
         print(ScheduleText.worker, ScheduleText.smena, str(ScheduleText.points))
-        insert_to_schedule(ScheduleText.points, ScheduleText.smena, ScheduleText.worker)
+        insert_to_schedule(ScheduleText.points, ScheduleText.smena, ScheduleText.worker, '../data/schedule.sqlite')
         await message.answer('График изменен')
         await state.clear()
     except Exception as e:

@@ -13,14 +13,14 @@ def get_all_points():
 
 
 def get_free_shift(point):
-    connection = sqlite3.connect('../data/schedule.sqlite')
+    connection = sqlite3.connect('data/schedule.sqlite')
     cursor = connection.cursor()
     res = cursor.execute(f'''
         SELECT * FROM "{point}"
         ''').fetchall()
-    tx = ('Вам доступны следующие смены:\n')
+    tx = 'Вам доступны следующие смены:\n'
     for i in range(1, len(res[0])):
-        if res[0][i] == None:
+        if res[0][i] is None:
             tx += f'{DAYS_LST[i - 1]}\n'
     return tx
 
@@ -32,8 +32,6 @@ def get_name_from_username(username):
     SELECT "ФИО" FROM "employees_wishes" WHERE "Username TG" = "{username}"
     ''').fetchone()
     return res
-
-
 
 
 def viev_schedule(ful_name):
@@ -54,6 +52,7 @@ def viev_schedule(ful_name):
 
     return result
 
+
 # connection = sqlite3.connect('../../data/users_data.sqlite')
 # cursor = connection.cursor()
 # cursor.execute(f'''
@@ -69,11 +68,8 @@ def viev_schedule(ful_name):
 # print(res)
 
 
-
-
 def contact_with_admin():
     pass
-
 
 
 def set_work_points(username, args):

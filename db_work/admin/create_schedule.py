@@ -1,4 +1,4 @@
-def auto_schedule_create(way_to_users_data, way_to_schedule):
+def auto_schedule_create(way_to_users_data, way_to_schedule="data/schedule.sqlite"):
     import sqlite3
 
     wishes = sqlite3.connect(way_to_users_data)

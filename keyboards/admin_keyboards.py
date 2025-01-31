@@ -9,7 +9,7 @@ def main() -> ReplyKeyboardMarkup:
     kb.button(text="Сформировать частичный график")
     kb.button(text="Отправить уведомления сотрудникам")
     kb.button(text="Графики на точках")
-    kb.button(text="")
+    kb.button(text="Связаться с сотрудником")
     kb.adjust(2)
     return kb.as_markup(resize_keyboard=True)
 

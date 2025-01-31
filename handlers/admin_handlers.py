@@ -4,10 +4,11 @@ from aiogram.filters.callback_data import CallbackQueryFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.types import Message, CallbackQuery
+from aiogram.utils.text_decorations import MarkdownDecoration
 
 from db_work.admin.create_schedule import auto_schedule_create
 from db_work.admin.edit_schedule import insert_to_schedule
-from db_work.admin.format_text import format_schedule_table
+from db_work.admin.format_text import format_worker_schedule_table
 from db_work.admin.get_data_about_point import get_data_about_point
 from db_work.admin.send_notifications import send_notifications
 from keyboards import admin_keyboards
@@ -61,9 +62,15 @@ async def check_points(message: Message) -> None:
 
 @router_admin_panel.message(lambda message: message.text in get_points())
 async def xyita(message: Message) -> None:
-    formatted_table = format_schedule_table(get_data_about_point(message.text), message.text)
-    ScheduleText.points = str(message.text)
-    await message.answer(formatted_table, parse_mode=ParseMode.HTML, reply_markup=edit_schedule().as_markup())
+    ScheduleText.points = message.text
+    table = f'Расписание {message.text}\n\n'
+    datas = get_data_about_point(message.text)
+    for i in datas.keys():
+
+        if datas[i] != 'None':
+            table += str(i) + ': ' + datas[i] + '\n'
+        table += str(i) + ': ' + 'Не занято' + '\n'
+    await message.answer(table, reply_markup=edit_schedule().as_markup())
 
 
 @router_admin_panel.message(F.text == 'Меню')
@@ -74,7 +81,7 @@ async def main_menu(message: Message) -> None:
 @router_admin_panel.callback_query(F.data == 'Редактировать')
 async def callback_query(callback: CallbackQuery, state: FSMContext) -> None:
     await callback.message.answer(
-        'Введите смену, которую вы бы хотели изменить в формате - "Время, День недели"("Утро, Понедельник")')
+        'Выберите день недели')
     await state.set_state(ScheduleText.smena)
 
 
@@ -91,10 +98,7 @@ async def smena(message: Message, state: FSMContext) -> None:
             "воскресенье": "ВС"
         }
         m = str(message.text).lower().split(', ')
-        res = f'{m[0]}{days_of_week[m[1]]}'
-        first_char = res[0].upper()
-        rest_of_text = res[1:]
-        result_text = first_char + rest_of_text
+        res = days_of_week[m[0]]
         ScheduleText.smena = res
         await state.set_state(ScheduleText.worker)
         await message.answer('Напишите полное ФИО работника, которого вы хотите назначить на смену')
@@ -107,7 +111,7 @@ async def worker(message: Message, state: FSMContext) -> None:
     try:
         ScheduleText.worker = message.text
         print(ScheduleText.worker, ScheduleText.smena, str(ScheduleText.points))
-        insert_to_schedule(ScheduleText.points, ScheduleText.smena, ScheduleText.worker, '../data/schedule.sqlite')
+        insert_to_schedule(ScheduleText.points, ScheduleText.smena, ScheduleText.worker)
         await message.answer('График изменен')
         await state.clear()
     except Exception as e:

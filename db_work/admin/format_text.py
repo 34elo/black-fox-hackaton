@@ -1,18 +1,23 @@
-def format_schedule_table(schedule, shop_name) -> str:
-    """Форматирует расписание в виде таблицы."""
+def format_worker_schedule_table(schedule_data, name_column_title, table_title='Расписание'):
+    days = list(schedule_data.keys())
+    names = list(schedule_data.values())
 
-    # Определение максимальной длины для выравнивания
-    max_day_len = max(len(day) for day in schedule)
-    max_name_len = max(max(len(name) for name in shifts.values()) for shifts in schedule.values())
+    max_name_length = max(len(name) for name in names if name != 'None')
+    if max_name_length == 0:
+        max_name_length = 4
 
-    header = f"| {'День':<{max_day_len}} | {'Утро':<{max_name_len}} | {'Вечер':<{max_name_len}} |\n"
-    separator = f"|{'-' * (max_day_len + 2)}|{'-' * (max_name_len + 2)}|{'-' * (max_name_len + 2)}|\n"
+    column_width_day = max(len(day) for day in days) + 2
+    column_width_name = max_name_length + 2
 
-    table = header + separator
-    for day, shifts in schedule.items():
-        morning_shift = shifts.get("Утро", " - ")
-        evening_shift = shifts.get("Вечер", " - ")
-        table += f"| {day:<{max_day_len}} | {morning_shift:<{max_name_len}} | {evening_shift:<{max_name_len}} |\n"
+    title_width = len(table_title) + 4
+    title_row = f"{' ' * ((column_width_day + column_width_name - title_width) // 2)}{table_title}\n"
 
-    formatted_text = f"<b>График работы магазина: {shop_name}</b>\n<pre>{table}</pre>"
-    return formatted_text  # <pre> чтобы форматирование выглядело таблицей
+    header = f"{'День'.ljust(column_width_day)} {name_column_title.ljust(column_width_name)}"
+    separator = f"{'-' * column_width_day} {'-' * column_width_name}"
+
+    row = ""
+    for i, day in enumerate(days):
+        row += f"{day.ljust(column_width_day)} {names[i].ljust(column_width_name)}\n"
+
+    table = title_row + header + "\n" + separator + "\n" + row
+    return table

@@ -101,8 +101,28 @@ def set_work_points(username, args):
     connection.commit()
     connection.close()
 
+def set_work_schedule(username, args):
+    connection = sqlite3.connect('data/users_data.sqlite')
+    cursor = connection.cursor()
+    try:
+        res = cursor.execute(f'''
+        SELECT "Желаемые смены" FROM employees_wishes
+        WHERE "Username TG" = "{username}"
+''').fetchone()[0]
+    except Exception as e:
+        print(e)
+    if res:
+        res += f';{args}'
+    else:
+        res = args
+    cursor.execute(f'''
+    UPDATE employees_wishes
+    SET "Желаемые смены" = "{res}"
+    WHERE "Username TG" = "{username}"
+    ''')
+    connection.commit()
+    connection.close()
 
-print()
 
 
 # def set_work_points(username, args):
@@ -123,6 +143,5 @@ print()
 #     ''')
 #     connection.commit()
 #     connection.close()
-
 def get_all_schedule():
     return DAYS_LST

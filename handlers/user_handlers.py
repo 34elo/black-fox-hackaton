@@ -2,8 +2,10 @@ from aiogram import Router, F
 from aiogram.types import Message, InlineKeyboardButton, CallbackQuery
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
+from db_work.admin.get_data_about_point import get_data_about_point
 from db_work.user.functions import get_all_points, get_free_shift, viev_schedule, get_name_from_username, \
-    set_work_points, get_all_admins, get_all_schedule
+    set_work_points, get_all_admins, get_all_schedule, set_work_schedule
+from handlers.admin_handlers import get_points
 
 router = Router()
 
@@ -90,10 +92,12 @@ async def handle_worker_buttons(message: Message):
         reply_markup=builder.as_markup()
     )
 
-@router.callback_query(F.data[:3] == 'ss_' )
+
+@router.callback_query(F.data[:3] == 'ss_')
 async def send_value(callback: CallbackQuery):
     print(get_all_admins()[0])
-    await callback.message.answer(f'Вы можете связаться с этим админом по данному контакту:\n\n @{str(callback.data[3:])}')
+    await callback.message.answer(
+        f'Вы можете связаться с этим админом по данному контакту:\n\n @{str(callback.data[3:])}')
 
 
 @router.message(F.text == "Установить желаемые точки работы")
@@ -148,3 +152,23 @@ async def go_set_work_schedule(message: Message):
         'Выберите точки, у которых хотите посмотреть расписание',
         reply_markup=builder.as_markup()
     )
+
+
+@router.callback_query(F.data[:13] == 'set_schedule_')
+async def add_schedule(callback: CallbackQuery):
+    point = callback.data[13:]
+    username = callback.from_user.username
+    set_work_schedule(username, point)
+    await callback.message.answer(f'{str(point)} успешно добавлено в список ваших желаемых смен')
+
+
+@router.message(lambda message: message.text in get_points())
+async def xyita(message: Message) -> None:
+    table = f'Расписание {message.text}\n\n'
+    datas = get_data_about_point(message.text)
+    for i in datas.keys():
+        if datas[i] != 'None':
+            table += str(i) + ': ' + datas[i] + '\n'
+        else:
+            table += str(i) + ': ' + 'Не занято' + '\n'
+    await message.answer(table)

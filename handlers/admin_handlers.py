@@ -45,7 +45,7 @@ def get_points() -> list[str]:  # список таблиц с точками
 @router_admin_panel.message(F.text == "Сформировать частичный график")
 async def create_schedule(message: Message) -> None:
     auto_schedule_create('data/users_data.sqlite', 'data/schedule.sqlite')
-    await message.answer('График сформирован')
+    await message.answer('График сформирован. Вы сможете ознакомиться с ним в меню "Графики на точках"')
 
 
 @router_admin_panel.message(F.text == "Отправить уведомления сотрудникам")

@@ -1,15 +1,14 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from aiogram.utils.keyboard import ReplyKeyboardBuilder
 
 
 def main() -> ReplyKeyboardMarkup:
-    return ReplyKeyboardMarkup(
-        keyboard=[
-            [KeyboardButton(text="Посмотреть свободные смены на определенной точке")],
-            [KeyboardButton(text="Посмотреть график в определенной точке")],
-            [KeyboardButton(text="Посмотреть все свои смены")],
-            [KeyboardButton(text="Связь с администратором")],
-            [KeyboardButton(text="Установить желаемые точки работы")],
-            [KeyboardButton(text="Установить желаемые смены")]
-        ],
-        resize_keyboard=True
-    )
+    kb = ReplyKeyboardBuilder()
+    kb.button(text="Посмотреть свободные смены на определенной точке")
+    kb.button(text="Посмотреть график в определенной точке")
+    kb.button(text="Посмотреть все свои смены")
+    kb.button(text="Связь с администратором")
+    kb.button(text='Установить желаемые точки работы')
+    kb.button(text='Установить желаемые смены')
+    kb.adjust(2)
+    return kb.as_markup(resize_keyboard=True)

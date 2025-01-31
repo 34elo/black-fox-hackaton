@@ -6,6 +6,16 @@ POINTS = ['25_Сентября_35а', '25_Сентября_35а/2', 'Багра�
 
 DAYS_LST = ['ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ', 'ВС']
 
+def get_all_admins():
+    connection = sqlite3.connect('data/users_data.sqlite')
+    cursor = connection.cursor()
+    res = cursor.execute(f'''
+        SELECT username, "ФИО" FROM "admin_passwords"
+    ''').fetchall()
+    return [list(map(lambda x: x[0], res)), list(map(lambda x: x[1], res))]
+
+
+
 
 def get_all_points():
     return POINTS

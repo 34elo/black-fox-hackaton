@@ -2,7 +2,8 @@ from aiogram import Router, F
 from aiogram.types import Message, InlineKeyboardButton, CallbackQuery
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-from db_work.user.functions import get_all_points, get_free_shift, viev_schedule, get_name_from_username,set_work_points
+from db_work.user.functions import get_all_points, get_free_shift, viev_schedule, get_name_from_username, \
+    set_work_points, get_all_admins
 
 router = Router()
 
@@ -70,7 +71,28 @@ async def handle_worker_buttons(message: Message):
 
 @router.message(F.text == "Связь с администратором")
 async def handle_worker_buttons(message: Message):
-    await message.answer(f"Вы выбрали: {message.text}")
+    builder = InlineKeyboardBuilder()
+    all_admins = get_all_admins()[1][:2]
+    all_usernames = get_all_admins()[0][:2]
+
+    for i in range(len(all_admins)):
+        builder.add(InlineKeyboardButton(
+            text=all_admins[i],
+            callback_data=f"{all_usernames[i]}"
+        ))
+
+    # Располагаем все кнопки вертикально (по одной в ряд)
+    builder.adjust(1)
+
+    await message.answer(
+        'Выберите Админа скоторым хотите связаться',
+        reply_markup=builder.as_markup()
+    )
+
+
+@router.callback_query(lambda data: F.data in get_all_admins()[1])
+async def send_random_value(callback: CallbackQuery):
+    await callback.message.answer(f'Вы можете связаться с этим админом по данному контакту:\n\n @{str(callback.data)}')
 
 
 @router.message(F.text == "Установить желаемые точки работы")

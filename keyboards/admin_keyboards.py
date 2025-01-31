@@ -34,3 +34,11 @@ def points_list(arg: list[str]) -> ReplyKeyboardMarkup:
 
     keyboard = ReplyKeyboardMarkup(keyboard=keyboard_buttons, resize_keyboard=True)
     return keyboard
+
+def edit_schedule() -> InlineKeyboardBuilder:
+    builder = InlineKeyboardBuilder()
+    builder.add(InlineKeyboardButton(
+        text="Редактировать",
+        callback_data="Редактировать")
+    )
+    return builder

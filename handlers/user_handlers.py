@@ -64,7 +64,6 @@ async def send_random_value(callback: CallbackQuery):
 @router.message(F.text == "Посмотреть все свои смены")
 async def handle_worker_buttons(message: Message):
     full_name = get_name_from_username(message.from_user.username)[0]
-
     await message.answer(f"{full_name}")
 
 

@@ -64,9 +64,8 @@ async def send_random_value(callback: CallbackQuery):
 @router.message(F.text == "Посмотреть все свои смены")
 async def handle_worker_buttons(message: Message):
     full_name = get_name_from_username(message.from_user.username)[0]
-    text = viev_schedule(full_name)
 
-    await message.answer(f"{text}")
+    await message.answer(f"{full_name}")
 
 
 @router.message(F.text == "Связь с администратором")

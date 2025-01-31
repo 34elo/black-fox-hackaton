@@ -90,9 +90,9 @@ async def handle_worker_buttons(message: Message):
     )
 
 
-@router.callback_query(lambda data: F.data in get_all_admins()[1])
-async def send_random_value(callback: CallbackQuery):
-    await callback.message.answer(f'Вы можете связаться с этим админом по данному контакту:\n\n @{str(callback.data)}')
+# @router.callback_query(lambda data: F.data in get_all_admins()[1])
+# async def send_random_value(callback: CallbackQuery):
+#     await callback.message.answer(f'Вы можете связаться с этим админом по данному контакту:\n\n @{str(callback.data)}')
 
 
 @router.message(F.text == "Установить желаемые точки работы")

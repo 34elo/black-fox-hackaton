@@ -76,7 +76,8 @@ async def xyita(message: Message) -> None:
 
         if datas[i] != 'None':
             table += str(i) + ': ' + datas[i] + '\n'
-        table += str(i) + ': ' + 'Не занято' + '\n'
+        else:
+            table += str(i) + ': ' + 'Не занято' + '\n'
     await message.answer(table, reply_markup=edit_schedule().as_markup())
 
 

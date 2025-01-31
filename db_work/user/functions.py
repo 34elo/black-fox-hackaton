@@ -73,11 +73,19 @@ def contact_with_admin():
 
 
 def set_work_points(username, args):
-    connection = sqlite3.connect('../data/schedule.sqlite')
+    connection = sqlite3.connect('../data/users_data.sqlite')
     cursor = connection.cursor()
+    res = list(cursor.execute(f'''
+    SELECT "Желаемые точки" FROM employees_wishes
+    WHERE Username TG = "{username}"
+    ''').fetchone()[0])
+    if res:
+        res += f';{args}'
+    else:
+        res = args
     cursor.execute(f'''
     UPDATE employees_wishes
-    SET employees_wishes = "{args}",
+    SET "Желаемые точки" = "{res}",
     WHERE Username TG = "{username}"
     ''')
     connection.commit()

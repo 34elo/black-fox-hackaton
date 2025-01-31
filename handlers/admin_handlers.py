@@ -122,7 +122,7 @@ async def worker(message: Message, state: FSMContext) -> None:
         ScheduleText.worker = message.text
         print(ScheduleText.worker, ScheduleText.smena, str(ScheduleText.points))
         insert_to_schedule(ScheduleText.points, ScheduleText.smena, ScheduleText.worker)
-        await message.answer('График сформирован.Ознакомится с ним вы можете нажав на кнопку "Расписание на точках"')
+        await message.answer('График сформирован. Ознакомится с ним вы можете нажав на кнопку "Расписание на точках"')
         await state.clear()
     except Exception as e:
         print(e)

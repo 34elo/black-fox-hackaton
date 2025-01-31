@@ -25,7 +25,7 @@ def get_free_shift(point):
 
 
 def get_name_from_username(username):
-    connection = sqlite3.connect('../data/users_data.sqlite')
+    connection = sqlite3.connect('data/users_data.sqlite')
     cursor = connection.cursor()
     res = cursor.execute(f'''
     SELECT "ФИО" FROM "employees_wishes" WHERE "Username TG" = "{username}"

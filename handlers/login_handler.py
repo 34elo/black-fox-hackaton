@@ -4,6 +4,10 @@ from aiogram.filters.command import CommandStart
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 
+from db_work.login.already_auth import already_auth
+from db_work.login.check_admin import check_admin_code
+from db_work.login.check_user import check_worker_code
+from db_work.login.put_chatID_schedule import put_data
 from keyboards import login_keyboard, admin_keyboards, user_keyboards
 
 main_router = Router()
@@ -17,40 +21,6 @@ class AuthWorker(StatesGroup):
     worker_code = State()
 
 
-def check_admin_code(password) -> bool:  # проверка на админа в бд
-    import sqlite3
-
-    data = sqlite3.connect('../../data/users_data.sqlite')
-    data_cursor = data.cursor()
-    data = data_cursor.execute('''SELECT "Пароль" 
-                                  FROM admin_passwords''').fetchall()
-    data = [i[0] for i in data]
-    return True if password in data else False
-
-
-def check_worker_code(password) -> bool:  # проверка на сотрудника в бд
-    import sqlite3
-
-    data = sqlite3.connect('../../data/users_data.sqlite')
-    data_cursor = data.cursor()
-    data = data_cursor.execute('''SELECT "Пароль" 
-                                      FROM employees_passwords''').fetchall()
-    data = [i[0] for i in data]
-    return True if password in data else False
-
-
-def already_auth(chat_id, role) -> (bool, bool):  # уже зареган(true) / админ или сотрудник(false)
-    import sqlite3
-
-    data = sqlite3.connect('../../data/users_data.sqlite')
-    data_cursor = data.cursor()
-    data_cursor.execute(f'''INSERT INTO "chatID_and_roles"("ChatID", "Role") 
-                                   VALUES ({chat_id}, {role})''').fetchall()
-    data.commit()
-    data.close()
-    return True, True
-
-
 @main_router.message(CommandStart())
 async def start(message: Message):
     # await message.answer_sticker(sticker="")
@@ -60,7 +30,7 @@ async def start(message: Message):
         else:
             await message.answer('Вы успешно авторизовались', reply_markup=user_keyboards.main())
     else:
-        await message.answer('Вы не авторизованы',reply_markup=user_keyboards.main())
+        await message.answer('Вы не авторизованы', reply_markup=login_keyboard.main())
 
 
 @main_router.message(F.text == 'Войти, как сотрудник')
@@ -76,14 +46,23 @@ async def message_with_text(message: Message, state: FSMContext):
 
 
 @main_router.message(AuthWorker.worker_code)
-async def message_with_text(message: Message):
+async def message_with_text(message: Message, state: FSMContext):
     if check_worker_code(message.text):
+        await state.clear()
         await message.answer('Вы успешно авторизовались', reply_markup=user_keyboards.main())
-    # кидает в табличку с пользователями и их ролями
+        await put_data(message.from_user.id, 'Сотрудник')
+    else:
+        await message.answer('Данные неверны, Попробуйте снова')
+        await state.set_state(AuthWorker.worker_code)
 
 
 @main_router.message(AuthAdmin.admin_code)
-async def message_with_text(message: Message):
+async def message_with_text(message: Message, state: FSMContext):
     if check_admin_code(message.text):
+        await state.clear()
         await message.answer('Вы успешно авторизовались', reply_markup=admin_keyboards.main())
-    # кидает в табличку с пользователями и их ролями
+        await put_data(message.from_user.id, 'Администратор')
+
+    else:
+        await message.answer('Данные неверны, Попробуйте снова')
+        await state.set_state(AuthAdmin.admin_code)

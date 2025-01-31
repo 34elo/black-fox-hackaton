@@ -8,6 +8,7 @@ from aiogram.fsm.state import StatesGroup, State
 from aiogram.types import Message, CallbackQuery
 from aiogram.utils.text_decorations import MarkdownDecoration
 
+import keyboards.admin_keyboards
 from db_work.admin.create_schedule import auto_schedule_create
 from db_work.admin.edit_schedule import insert_to_schedule
 from db_work.admin.format_text import format_worker_schedule_table
@@ -44,7 +45,7 @@ def get_points() -> list[str]:  # список таблиц с точками
 @router_admin_panel.message(F.text == "Сформировать частичный график")
 async def create_schedule(message: Message) -> None:
     auto_schedule_create('data/users_data.sqlite', 'data/schedule.sqlite')
-    await message.answer('График сформирован')
+    await message.answer('График сформирован. Вы сможете ознакомиться с ним в меню "Графики на точках"')
 
 
 @router_admin_panel.message(F.text == "Отправить уведомления сотрудникам")
@@ -60,7 +61,7 @@ async def message_with_text(message: Message, state: FSMContext) -> None:
     await state.clear()
 
 
-@router_admin_panel.message(F.text == "Графики на точках")
+@router_admin_panel.message(F.text == "Расписание на точках")
 async def check_points(message: Message) -> None:
     text = 'Выберите точку из приведенных ниже\n\n'
     for item in get_points():
@@ -79,7 +80,7 @@ async def xyita(message: Message) -> None:
             table += str(i) + ': ' + datas[i] + '\n'
         else:
             table += str(i) + ': ' + 'Не занято' + '\n'
-    await message.answer(table, reply_markup=edit_schedule().as_markup())
+    await message.answer(table)
 
 
 @router_admin_panel.message(F.text == 'Меню')
@@ -90,7 +91,7 @@ async def main_menu(message: Message) -> None:
 @router_admin_panel.callback_query(F.data == 'Редактировать')
 async def callback_query(callback: CallbackQuery, state: FSMContext) -> None:
     await callback.message.answer(
-        'Выберите день недели')
+        'Выберите день недели', keyboards = admin_keyboards.day_week())
     await state.set_state(ScheduleText.smena)
 
 
@@ -121,7 +122,7 @@ async def worker(message: Message, state: FSMContext) -> None:
         ScheduleText.worker = message.text
         print(ScheduleText.worker, ScheduleText.smena, str(ScheduleText.points))
         insert_to_schedule(ScheduleText.points, ScheduleText.smena, ScheduleText.worker)
-        await message.answer('График изменен')
+        await message.answer('График сформирован. Ознакомится с ним вы можете нажав на кнопку "Расписание на точках"')
         await state.clear()
     except Exception as e:
         print(e)
@@ -148,9 +149,11 @@ async def top_users(message: Message, state: FSMContext) -> None:
         text += str(item[0]) + ' - ' + str(item[1]) + '\n'
     await message.answer(text)
 
+
 @router_admin_panel.message(F.text == 'Выгрузить в Excel')
 async def excel(message: Message, state: FSMContext) -> None:
     await message.answer('В разработке')
+
 
 @router_admin_panel.message(F.text == 'Загрузить из Excel')
 async def excel(message: Message, state: FSMContext) -> None:

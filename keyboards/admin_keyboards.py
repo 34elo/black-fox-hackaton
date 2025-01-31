@@ -8,7 +8,7 @@ def main() -> ReplyKeyboardMarkup:
     kb = ReplyKeyboardBuilder()
     kb.button(text="Сформировать частичный график")
     kb.button(text="Отправить уведомления сотрудникам")
-    kb.button(text="Графики на точках")
+    kb.button(text="Расписание на точках")
     kb.button(text="Связаться с сотрудником")
     kb.button(text="Количество смен у работников")
     kb.button(text='Выгрузить в Excel')
@@ -46,3 +46,15 @@ def edit_schedule() -> InlineKeyboardBuilder:
         callback_data="Редактировать")
     )
     return builder
+
+
+def day_week() -> ReplyKeyboardMarkup:
+    kb = ReplyKeyboardBuilder()
+    kb.button(text="Понедельник")
+    kb.button(text="Вторник")
+    kb.button(text="Среда")
+    kb.button(text="Четверг")
+    kb.button(text='Пятница')
+    kb.button(text='Суббота')
+    kb.button(text="Воскресенье")
+    return kb.as_markup(resize_keyboard=True)

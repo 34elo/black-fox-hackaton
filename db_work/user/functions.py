@@ -100,24 +100,6 @@ def set_work_points(username, args):
     connection.commit()
     connection.close()
 
-def set_work_points(username, args):
-    connection = sqlite3.connect('../data/users_data.sqlite')
-    cursor = connection.cursor()
-    res = list(cursor.execute(f'''
-    SELECT "Желаемые точки" FROM employees_wishes
-    WHERE Username TG = "{username}"
-    ''').fetchone()[0])
-    if res:
-        res += f';{args}'
-    else:
-        res = args
-    cursor.execute(f'''
-    UPDATE employees_wishes
-    SET "Желаемые точки" = "{res}",
-    WHERE Username TG = "{username}"
-    ''')
-    connection.commit()
-    connection.close()
 
 def set_work_schedule():
     return

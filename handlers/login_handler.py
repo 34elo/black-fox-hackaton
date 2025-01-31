@@ -30,7 +30,9 @@ async def start(message: Message):
         else:
             await message.answer('Вы успешно авторизовались', reply_markup=user_keyboards.main())
     else:
-        await message.answer('Вы не авторизованы', reply_markup=login_keyboard.main())
+        await message.answer(
+            'Вам нужно авторизоваться',
+            reply_markup=login_keyboard.main())
 
 
 @main_router.message(F.text == 'Войти, как сотрудник')

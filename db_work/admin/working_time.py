@@ -1,4 +1,4 @@
-def get_working_times(way_to_users_data, way_to_schedule):
+def get_working_times(way_to_users_data='data/users_data.sqlite', way_to_schedule='data/schedule.sqlite'):
     import sqlite3
 
     POINTS = ['25_Сентября_35а', '25_Сентября_35а/2', 'Багратиона_16', 'Дзержинского_9', 'Коммунистическая_6',

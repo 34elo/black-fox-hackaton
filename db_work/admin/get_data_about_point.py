@@ -22,5 +22,3 @@ def get_data_about_point(arg) -> {}:
         "Воскресенье": data[6],
     }
     return schedule
-
-print(get_data_about_point('Дзержинского_9'))

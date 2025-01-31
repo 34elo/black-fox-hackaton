@@ -4,8 +4,7 @@ POINTS = ['25_Сентября_35а', '25_Сентября_35а/2', 'Багра�
           'Лавочкина_54/6', 'Николаева_50', 'Ново-московская_2/8_ст4', 'Проспект_Гагарина_1/1', 'Рыленкова_18',
           'Энергетический_проезд3/4', 'Крупской_42', 'Студенческая_6']
 
-DAYS_LST = ['УтроПН', 'ВечерПН', 'УтроВТ', 'ВечерВТ', 'УтроСР', 'ВечерСР', 'УтроЧТ', 'ВечерЧТ', 'УтроПТ', 'ВечерПТ',
-            'УтроСБ', 'ВечерСБ', 'УтроВС', 'ВечерВС']
+DAYS_LST = ['ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ', 'ВС']
 
 
 def get_all_points():
@@ -91,6 +90,24 @@ def set_work_points(username, args):
     connection.commit()
     connection.close()
 
+def set_work_points(username, args):
+    connection = sqlite3.connect('../data/users_data.sqlite')
+    cursor = connection.cursor()
+    res = list(cursor.execute(f'''
+    SELECT "Желаемые точки" FROM employees_wishes
+    WHERE Username TG = "{username}"
+    ''').fetchone()[0])
+    if res:
+        res += f';{args}'
+    else:
+        res = args
+    cursor.execute(f'''
+    UPDATE employees_wishes
+    SET "Желаемые точки" = "{res}",
+    WHERE Username TG = "{username}"
+    ''')
+    connection.commit()
+    connection.close()
 
-def set_work_shifts():
+def set_work_schedule():
     return

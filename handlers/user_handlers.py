@@ -2,7 +2,7 @@ from aiogram import Router, F
 from aiogram.types import Message, InlineKeyboardButton, CallbackQuery
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-from db_work.user.functions import get_all_points, get_free_shift, viev_schedule, get_name_from_username
+from db_work.user.functions import get_all_points, get_free_shift, viev_schedule, get_name_from_username,set_work_points
 
 router = Router()
 
@@ -64,8 +64,8 @@ async def send_random_value(callback: CallbackQuery):
 @router.message(F.text == "Посмотреть все свои смены")
 async def handle_worker_buttons(message: Message):
     full_name = get_name_from_username(message.from_user.username)[0]
-
-    await message.answer(f"{full_name}")
+    text = viev_schedule(full_name)
+    await message.answer(f"{text}")
 
 
 @router.message(F.text == "Связь с администратором")
@@ -99,6 +99,8 @@ async def set_points(message: Message):
 @router.callback_query(F.data[:11] == 'set_points_')
 async def add_points(callback: CallbackQuery):
     point = callback.data[11:]
+    username = callback.from_user.username
+    set_work_points(username, point)
     await callback.message.answer(f'{str(point)} успешно добавлено в список ваших желаемых точек')
 
 

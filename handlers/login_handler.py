@@ -31,19 +31,19 @@ async def start(message: Message):
             await message.answer('Вы успешно авторизовались', reply_markup=user_keyboards.main())
     else:
         await message.answer(
-            'Вам нужно авторизоваться',
+            'Вам нужно авторизоваться, выберите вашу роль:',
             reply_markup=login_keyboard.main())
 
 
-@main_router.message(F.text == 'Войти, как сотрудник')
+@main_router.message(F.text == 'Сотрудник')
 async def message_with_text(message: Message, state: FSMContext):
-    await message.answer("Введите код сотрудника")
+    await message.answer("Введите пароль сотрудника")
     await state.set_state(AuthWorker.worker_code)
 
 
-@main_router.message(F.text == 'Войти, как руководитель')
+@main_router.message(F.text == 'Администратор')
 async def message_with_text(message: Message, state: FSMContext):
-    await message.answer("Введите код руководителя")
+    await message.answer("Введите пароль администратора")
     await state.set_state(AuthAdmin.admin_code)
 
 

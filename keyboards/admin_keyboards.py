@@ -7,14 +7,15 @@ from aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardBuilder, 
 def main() -> ReplyKeyboardMarkup:
     kb = ReplyKeyboardBuilder()
     kb.button(text="Сформировать частичный график")
-    kb.button(text="Отправить уведомления сотрудникам")
+    kb.button(text="Отправить уведомление сотрудникам")
     kb.button(text="Расписание на точках")
     kb.button(text="Связаться с сотрудником")
-    kb.button(text="Количество смен у работников")
+    kb.button(text="Количество смен у сотрудников")
     kb.button(text='Выгрузить в Excel')
     kb.button(text='Загрузить из Excel')
     kb.adjust(2)
     return kb.as_markup(resize_keyboard=True)
+
 
 
 def points_list(arg: list[str]) -> ReplyKeyboardMarkup:

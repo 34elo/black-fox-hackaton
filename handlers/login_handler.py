@@ -23,7 +23,6 @@ class AuthWorker(StatesGroup):
 
 @main_router.message(CommandStart())
 async def start(message: Message):
-    # await message.answer_sticker(sticker="")
     if already_auth(message.chat.id)[0]:
         if already_auth(message.chat.id)[1]:
             await message.answer('Вы успешно авторизовались', reply_markup=admin_keyboards.main())
